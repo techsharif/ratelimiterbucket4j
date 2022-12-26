@@ -43,7 +43,11 @@ public class UserServiceImpl implements UserService{
     public User createUser(User user) {
         if (user.getId() != null)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id should be null");
-        return userRepository.save(user);
+        try {
+            return userRepository.save(user);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
 

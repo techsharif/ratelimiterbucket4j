@@ -2,7 +2,7 @@ package com.example.ratelimiterbucket4j.entity;
 
 
 import com.example.ratelimiterbucket4j.enumeration.RateLimitApiName;
-import com.example.ratelimiterbucket4j.utill.BucketLimitConverter;
+import com.example.ratelimiterbucket4j.util.BucketLimitConverter;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -17,7 +17,7 @@ public class User implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@Id()
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	@Column(name = "api_key")
@@ -27,6 +27,7 @@ public class User implements Serializable{
 
 	@Column(columnDefinition = "text")
 	@Convert(converter = BucketLimitConverter.class)
+	@MapKeyEnumerated(EnumType.STRING)
 	private Map<RateLimitApiName, Integer> limits;
 	
 }

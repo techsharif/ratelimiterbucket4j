@@ -1,4 +1,4 @@
-package com.example.ratelimiterbucket4j.utill;
+package com.example.ratelimiterbucket4j.util;
 import com.example.ratelimiterbucket4j.enumeration.RateLimitApiName;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
