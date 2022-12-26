@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -40,14 +39,15 @@ public class RequestFilter extends OncePerRequestFilter {
 		} else {
 			String apiKey = request.getHeader("X-API-KEY");
 			if (StringUtils.isNotBlank(apiKey)) {
+				log.info(apiName.toString());
 				Bucket bucket = rateLimitService.resolveBucket(apiName, apiKey);
 				if (bucket.tryConsume(1)) {
 					filterChain.doFilter(request, response);
 				} else {
-					throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS);
+					response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
 				}
 			} else {
-				throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS);
+				response.setStatus(HttpStatus.BAD_REQUEST.value());
 			}
 		}
 
