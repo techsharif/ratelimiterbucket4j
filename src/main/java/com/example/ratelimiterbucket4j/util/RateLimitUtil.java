@@ -22,6 +22,7 @@ public class RateLimitUtil {
         for (RateLimitMap entry : prefixes) {
             if (requestUri.startsWith(entry.getPrefix())) {
                 apiName = entry.getRateLimitApiName();
+                break;
             }
         }
         return apiName;
