@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Duration;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -45,7 +44,7 @@ public class RateLimitServiceImpl implements RateLimitService{
 
     private BucketConfiguration createBucketConfiguration(RateLimitApiName apiName, String apiKey){
         User user = getUserByApiKey(apiKey);
-        Integer userLimit = getLimit(user.getLimits(), apiName);
+        Integer userLimit = user.getLimits().get(apiName);
 
         Refill refill = Refill.intervally(userLimit, Duration.ofMinutes(1));
         Bandwidth limit = Bandwidth.classic(userLimit, refill);
@@ -65,15 +64,5 @@ public class RateLimitServiceImpl implements RateLimitService{
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid user id");
         }
         return userOptional.get();
-    }
-
-    private Integer getLimit(Map<RateLimitApiName, Integer> data, RateLimitApiName apiName) {
-        Integer limit = 5; // todo: default
-
-        for (Map.Entry<RateLimitApiName, Integer> entry : data.entrySet()) {
-            if (String.valueOf(entry.getKey()).equals(String.valueOf(apiName))) return entry.getValue();
-        }
-
-        return limit;
     }
 }
